@@ -8,6 +8,8 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 57fabc5f0e45f48d2407b35c731192abc896376411fe7e4bb836ffa03d38f90d
+  patches:
+    - patches/0001-remove-cython-from-requirements.patch
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
@@ -16,7 +18,7 @@ requirements:
   build:
     - {{ compiler('c') }}
   host:
-    - cython 0.29.36
+    - cython 0.29
     - numpy {{ numpy }}
     - python
     - pip
@@ -26,14 +28,12 @@ requirements:
     - python
     - scikit-learn >=0.20
     - joblib >=1.0
-    - numpy >=1.20
+    - {{ pin_compatible('numpy') }}
     - scipy >=1.0
 
 test:
   requires:
     - pip
-    # cython only required for pip check.
-    - cython >=0.27,<3
   imports:
     - hdbscan
   commands:
