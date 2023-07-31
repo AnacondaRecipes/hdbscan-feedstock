@@ -10,7 +10,7 @@ source:
   sha256: 57fabc5f0e45f48d2407b35c731192abc896376411fe7e4bb836ffa03d38f90d
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vvv
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   build:
@@ -25,14 +25,15 @@ requirements:
   run:
     - python
     - scikit-learn >=0.20
-    - joblib  >=1.0
-    - cython >=0.27,<3
-    - {{ pin_compatible('numpy') }}
+    - joblib >=1.0
     - numpy >=1.20
+    - scipy >=1.0
 
 test:
   requires:
     - pip
+    # cython only required for pip check.
+    - cython >=0.27,<3
   imports:
     - hdbscan
   commands:
