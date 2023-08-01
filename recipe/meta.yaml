@@ -17,6 +17,8 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - patch  # [unix]
+    - m2-patch  # [win]
   host:
     - cython 0.29
     - numpy {{ numpy }}
@@ -57,7 +59,7 @@ about:
 
     HDBSCAN is ideal for exploratory data analysis; it's a fast and robust algorithm that you 
     can trust to return meaningful clusters (if there are any).
-  doc_url: https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html
+  doc_url: https://hdbscan.readthedocs.io/en/latest/
   dev_url: https://github.com/scikit-learn-contrib/hdbscan
 
 extra:
