@@ -1,49 +1,66 @@
-{% set version = "0.8.29" %}
+{% set version = "0.8.33" %}
+{% set name = "hdbscan" %}
 
 package:
-  name: hdbscan
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/h/hdbscan/hdbscan-{{ version }}.tar.gz
-  sha256: 7e9d7351610eaadddb281e3149a74e22e329bc0b5325f631031d4b63a6a770ae
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 57fabc5f0e45f48d2407b35c731192abc896376411fe7e4bb836ffa03d38f90d
+  patches:
+    - patches/0001-remove-cython-from-requirements.patch
 build:
-  number: 2
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
-    - numpy                                  # [build_platform != target_platform]
     - {{ compiler('c') }}
+    - patch  # [unix]
+    - m2-patch  # [win]
   host:
+    - cython 0.29
+    - numpy {{ numpy }}
     - python
     - pip
     - setuptools
-    - scikit-learn >=0.16
-    - cython >=0.17
-    - joblib
-    - numpy
-
+    - wheel
   run:
     - python
-    - scikit-learn >=0.16
-    - joblib
-    - six
-    - cython >=0.17
+    - scikit-learn >=0.20
+    - joblib >=1.0
     - {{ pin_compatible('numpy') }}
+    - scipy >=1.0
 
 test:
+  requires:
+    - pip
   imports:
     - hdbscan
+  commands:
+    - pip check
 
 about:
-  home: http://github.com/lmcinnes/hdbscan
+  home: https://github.com/scikit-learn-contrib/hdbscan
   license: BSD-3-Clause
+  license_family: BSD
   license_file: LICENSE
   summary: Clustering based on density with variable density clusters
+  description: |
+    HDBSCAN - Hierarchical Density-Based Spatial Clustering of Applications with Noise. 
+    Performs DBSCAN over varying epsilon values and integrates the result to find a clustering 
+    that gives the best stability over epsilon. This allows HDBSCAN to find clusters of varying 
+    densities (unlike DBSCAN), and be more robust to parameter selection. 
+
+    In practice this means that HDBSCAN returns a good clustering straight away with little or 
+    no parameter tuning -- and the primary parameter, minimum cluster size, is intuitive and 
+    easy to select.
+
+    HDBSCAN is ideal for exploratory data analysis; it's a fast and robust algorithm that you 
+    can trust to return meaningful clusters (if there are any).
+  doc_url: https://hdbscan.readthedocs.io
+  dev_url: https://github.com/scikit-learn-contrib/hdbscan
 
 extra:
   recipe-maintainers:
