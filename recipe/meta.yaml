@@ -11,14 +11,13 @@ source:
   patches:
     - patches/0001-remove-cython-from-requirements.patch
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
-    - patch  # [unix]
-    - m2-patch  # [win]
   host:
     - cython 0.29
     - numpy {{ numpy }}
